@@ -119,7 +119,7 @@ inline void from_json(const nlohmann::json& j, CreateBanRequest& v) {
 // CreateBanResponse
 // ---------------------------------------------------------------------------
 struct CreateBanResponse {
-    int64_t ban_id;
+    std::string ban_id;
     std::string device_id;
     std::string ban_type;
     std::string scope;
@@ -154,7 +154,7 @@ inline void from_json(const nlohmann::json& j, CreateBanResponse& v) {
 // RevokeBanResponse
 // ---------------------------------------------------------------------------
 struct RevokeBanResponse {
-    int64_t ban_id;
+    std::string ban_id;
     std::string device_id;
     std::string status;
 };
@@ -164,7 +164,7 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(RevokeBanResponse, ban_id, device_id, status)
 // BanItem
 // ---------------------------------------------------------------------------
 struct BanItem {
-    int64_t ban_id;
+    std::string ban_id;
     std::string ban_type;
     std::string scope;
     std::string publisher_id;

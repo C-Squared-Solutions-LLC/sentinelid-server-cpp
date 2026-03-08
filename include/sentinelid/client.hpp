@@ -29,7 +29,7 @@ public:
 
     DeviceCheckResponse device_check(const DeviceCheckRequest& req);
     CreateBanResponse create_ban(const CreateBanRequest& req);
-    RevokeBanResponse revoke_ban(int64_t ban_id);
+    RevokeBanResponse revoke_ban(const std::string& ban_id);
     BanListResponse list_cheat_bans(const std::string& device_id,
         std::optional<std::string> status = std::nullopt,
         std::optional<int> limit = std::nullopt,

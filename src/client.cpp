@@ -122,8 +122,8 @@ CreateBanResponse ServerClient::create_ban(const CreateBanRequest& req) {
     return resp_json.get<CreateBanResponse>();
 }
 
-RevokeBanResponse ServerClient::revoke_ban(int64_t ban_id) {
-    std::string path = "/v1/bans/" + std::to_string(ban_id) + "/revoke";
+RevokeBanResponse ServerClient::revoke_ban(const std::string& ban_id) {
+    std::string path = "/v1/bans/" + ban_id + "/revoke";
     auto resp_json = pimpl_->post(path, nlohmann::json::object());
     return resp_json.get<RevokeBanResponse>();
 }
