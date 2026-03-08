@@ -7,6 +7,15 @@
 
 namespace sentinelid {
 
+// Helper: read a JSON field that may be either a string or an integer
+inline std::string json_str_or_num(const nlohmann::json& j, const char* key) {
+    const auto& v = j.at(key);
+    if (v.is_string()) return v.get<std::string>();
+    if (v.is_number_integer()) return std::to_string(v.get<int64_t>());
+    if (v.is_number()) return std::to_string(v.get<double>());
+    throw nlohmann::json::type_error::create(302, "ban_id must be string or number", &v);
+}
+
 // Helper: write optional field to JSON only if it has a value
 template <typename T>
 void optional_to_json(nlohmann::json& j, const char* key, const std::optional<T>& opt) {
@@ -141,7 +150,7 @@ inline void to_json(nlohmann::json& j, const CreateBanResponse& v) {
 }
 
 inline void from_json(const nlohmann::json& j, CreateBanResponse& v) {
-    j.at("ban_id").get_to(v.ban_id);
+    v.ban_id = json_str_or_num(j, "ban_id");
     j.at("device_id").get_to(v.device_id);
     j.at("ban_type").get_to(v.ban_type);
     j.at("scope").get_to(v.scope);
@@ -158,7 +167,16 @@ struct RevokeBanResponse {
     std::string device_id;
     std::string status;
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(RevokeBanResponse, ban_id, device_id, status)
+
+inline void to_json(nlohmann::json& j, const RevokeBanResponse& v) {
+    j = nlohmann::json{{"ban_id", v.ban_id}, {"device_id", v.device_id}, {"status", v.status}};
+}
+
+inline void from_json(const nlohmann::json& j, RevokeBanResponse& v) {
+    v.ban_id = json_str_or_num(j, "ban_id");
+    j.at("device_id").get_to(v.device_id);
+    j.at("status").get_to(v.status);
+}
 
 // ---------------------------------------------------------------------------
 // BanItem
@@ -192,7 +210,7 @@ inline void to_json(nlohmann::json& j, const BanItem& v) {
 }
 
 inline void from_json(const nlohmann::json& j, BanItem& v) {
-    j.at("ban_id").get_to(v.ban_id);
+    v.ban_id = json_str_or_num(j, "ban_id");
     j.at("ban_type").get_to(v.ban_type);
     j.at("scope").get_to(v.scope);
     j.at("publisher_id").get_to(v.publisher_id);
